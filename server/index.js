@@ -36,9 +36,30 @@ app.get('/read', async (req, res) => {
     if (err) {
       res.send(err)
     }
-    console.log('sending fro read')
+    console.log('sending for read')
     res.send(result)
   })
+})
+
+app.put('/update', async (req, res) => {
+  const newFoodName = req.body.newFoodName
+  const id = req.body.id
+  try {
+    await FoodModel.findById(id, (err, updatedFood) => {
+      updatedFood.foodName = newFoodName
+      updatedFood.save()
+      res.send('updated')
+    })
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+app.delete('/delete/:id', async (req, res) => {
+  const id = req.params.id
+
+  await FoodModel.findByIdAndRemove(id).exec()
+  res.send('deleted')
 })
 
 app.listen(3001, () => {
